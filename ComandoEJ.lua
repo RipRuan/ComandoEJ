@@ -1,4 +1,4 @@
--- // COMANDO EJ - VERSÃO ATUALIZADA // --
+-- // COMANDO EJ - VERSÃO CORRIGIDA // --
 local s = Instance.new
 local g = game:GetService("Players").LocalPlayer.PlayerGui
 local plr = game:GetService("Players").LocalPlayer
@@ -117,7 +117,7 @@ m.InputChanged:Connect(UpdateDrag)
 m.InputEnded:Connect(EndDrag)
 
 -- ============================================
--- BOTÃO MINIMIZAR
+-- BOTÃO MINIMIZAR (CORRIGIDO)
 -- ============================================
 local mn = s("TextButton")
 mn.Size = UDim2.new(0, 30, 0, 30)
@@ -136,22 +136,32 @@ mnCorner.Parent = mn
 mnCorner.CornerRadius = UDim.new(0, 8)
 
 local mini = false
+
+-- Lista de elementos que NÃO devem ser escondidos (ficam sempre visíveis)
+local sempreVisiveis = {mn, m:FindFirstChild("Titulo"), borda, brilho}
+
 mn.MouseButton1Click:Connect(function()
     mini = not mini
     if mini then
-        m.Size = UDim2.new(0, 300, 0, 40)
+        m.Size = UDim2.new(0, 300, 0, 40) -- encolhe o frame
         for _, c in pairs(m:GetChildren()) do
-            if c ~= mn and c ~= m:FindFirstChild("Titulo") and c ~= borda and c ~= brilho then
+            local deveFicar = false
+            for _, v in pairs(sempreVisiveis) do
+                if c == v then deveFicar = true break end
+            end
+            if not deveFicar then
                 c.Visible = false
             end
         end
         mn.Text = "➕"
+        print("🟡 Minimizado")
     else
-        m.Size = UDim2.new(0, 300, 0, 320)
+        m.Size = UDim2.new(0, 300, 0, 320) -- volta ao tamanho normal
         for _, c in pairs(m:GetChildren()) do
             c.Visible = true
         end
         mn.Text = "➖"
+        print("🟢 Restaurado")
     end
 end)
 
@@ -170,15 +180,18 @@ t.Font = Enum.Font.GothamBold
 t.ZIndex = 2
 t.Parent = m
 
-local p = s("TextLabel")
-p.Size = UDim2.new(1, 0, 0, 30)
-p.Position = UDim2.new(0, 0, 0, 40)
-p.BackgroundTransparency = 1
-p.Text = "PARKOUR"
-p.TextColor3 = Color3.fromRGB(255, 255, 255)
-p.TextScaled = true
-p.Font = Enum.Font.Gotham
-p.Parent = m
+-- ============================================
+-- BOTÃO PARKOUR (com GHOST V1)
+-- ============================================
+local pLabel = s("TextLabel")
+pLabel.Size = UDim2.new(1, 0, 0, 30)
+pLabel.Position = UDim2.new(0, 0, 0, 40)
+pLabel.BackgroundTransparency = 1
+pLabel.Text = "PARKOUR"
+pLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+pLabel.TextScaled = true
+pLabel.Font = Enum.Font.Gotham
+pLabel.Parent = m
 
 local pk = s("TextButton")
 pk.Size = UDim2.new(0.8, 0, 0, 35)
@@ -198,15 +211,15 @@ pkCorner.CornerRadius = UDim.new(0, 10)
 -- ============================================
 -- BOTÃO JJS
 -- ============================================
-local j = s("TextLabel")
-j.Size = UDim2.new(1, 0, 0, 30)
-j.Position = UDim2.new(0, 0, 0, 110)
-j.BackgroundTransparency = 1
-j.Text = "ATIVAR JJs"
-j.TextColor3 = Color3.fromRGB(255, 255, 255)
-j.TextScaled = true
-j.Font = Enum.Font.Gotham
-j.Parent = m
+local jLabel = s("TextLabel")
+jLabel.Size = UDim2.new(1, 0, 0, 30)
+jLabel.Position = UDim2.new(0, 0, 0, 110)
+jLabel.BackgroundTransparency = 1
+jLabel.Text = "ATIVAR JJs"
+jLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+jLabel.TextScaled = true
+jLabel.Font = Enum.Font.Gotham
+jLabel.Parent = m
 
 local jj = s("TextButton")
 jj.Size = UDim2.new(0.8, 0, 0, 35)
@@ -226,15 +239,15 @@ jjCorner.CornerRadius = UDim.new(0, 10)
 -- ============================================
 -- BOTÃO HITBOX
 -- ============================================
-local h = s("TextLabel")
-h.Size = UDim2.new(1, 0, 0, 30)
-h.Position = UDim2.new(0, 0, 0, 180)
-h.BackgroundTransparency = 1
-h.Text = "PVP HITBOX"
-h.TextColor3 = Color3.fromRGB(255, 255, 255)
-h.TextScaled = true
-h.Font = Enum.Font.Gotham
-h.Parent = m
+local hLabel = s("TextLabel")
+hLabel.Size = UDim2.new(1, 0, 0, 30)
+hLabel.Position = UDim2.new(0, 0, 0, 180)
+hLabel.BackgroundTransparency = 1
+hLabel.Text = "PVP HITBOX"
+hLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+hLabel.TextScaled = true
+hLabel.Font = Enum.Font.Gotham
+hLabel.Parent = m
 
 local hb = s("TextButton")
 hb.Size = UDim2.new(0.8, 0, 0, 35)
@@ -281,25 +294,19 @@ local pa = false
 local ja = false
 local ha = false
 
--- ============================================
--- BOTÃO PARKOUR - EXECUTA O GHOST V1 (BARREIRAS)
--- ============================================
+-- PARKOUR
 pk.MouseButton1Click:Connect(function()
     pa = not pa
     pk.Text = pa and "PARKOUR: ON" or "PARKOUR: OFF"
     pk.BackgroundColor3 = pa and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
     if pa then
-        print("🟢 PARKOUR ATIVADO - Carregando GHOST V1...")
         e("https://raw.githubusercontent.com/RipRuan/BarreirasMobile/main/BarreirasMobile.lua")
     else
         print("🔴 PARKOUR DESATIVADO")
-        -- Aqui você pode colocar uma função pra desativar o script se quiser
     end
 end)
 
--- ============================================
--- BOTÃO JJS
--- ============================================
+-- JJS
 jj.MouseButton1Click:Connect(function()
     ja = not ja
     jj.Text = ja and "JJS: ON" or "JJS: OFF"
@@ -311,9 +318,7 @@ jj.MouseButton1Click:Connect(function()
     end
 end)
 
--- ============================================
--- BOTÃO HITBOX
--- ============================================
+-- HITBOX
 hb.MouseButton1Click:Connect(function()
     ha = not ha
     hb.Text = ha and "HITBOX: ON" or "HITBOX: OFF"
