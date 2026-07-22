@@ -1,10 +1,10 @@
--- // COMANDO EJ - VERSÃO CORRIGIDA // --
+-- // COMANDO EJ - VERSÃO SIMPLES E GARANTIDA // --
 local s = Instance.new
 local g = game:GetService("Players").LocalPlayer.PlayerGui
 local plr = game:GetService("Players").LocalPlayer
 
 -- ============================================
--- CRIAÇÃO DA GUI PRINCIPAL
+-- CRIAÇÃO DA GUI
 -- ============================================
 local f = s("ScreenGui")
 f.Name = "REDMY_GUI"
@@ -19,14 +19,11 @@ m.BorderSizePixel = 0
 m.Active = true
 m.Parent = f
 
--- BORDAS ARREDONDADAS
 local mainCorner = Instance.new("UICorner")
 mainCorner.Parent = m
 mainCorner.CornerRadius = UDim.new(0, 12)
 
--- ============================================
--- BORDA RGB ANIMADA
--- ============================================
+-- BORDA RGB
 local borda = s("Frame")
 borda.Size = UDim2.new(1, 10, 1, 10)
 borda.Position = UDim2.new(-0.02, 0, -0.02, 0)
@@ -35,7 +32,6 @@ borda.BackgroundTransparency = 0
 borda.BorderSizePixel = 0
 borda.ZIndex = 0
 borda.Parent = m
-
 local bordaCorner = Instance.new("UICorner")
 bordaCorner.Parent = borda
 bordaCorner.CornerRadius = UDim.new(0, 14)
@@ -45,9 +41,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     borda.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
 end)
 
--- ============================================
--- EFEITO DE BRILHO PULSANTE
--- ============================================
+-- BRILHO
 local brilho = s("Frame")
 brilho.Size = UDim2.new(1, 14, 1, 14)
 brilho.Position = UDim2.new(-0.025, 0, -0.025, 0)
@@ -56,7 +50,6 @@ brilho.BackgroundTransparency = 0.8
 brilho.BorderSizePixel = 0
 brilho.ZIndex = -1
 brilho.Parent = m
-
 local brilhoCorner = Instance.new("UICorner")
 brilhoCorner.Parent = brilho
 brilhoCorner.CornerRadius = UDim.new(0, 16)
@@ -76,49 +69,43 @@ task.spawn(function()
     end
 end)
 
--- ============================================
--- SISTEMA DE ARRASTO
--- ============================================
+-- ARRASTO
 local dragging = false
-local dragStart = nil
-local startPos = nil
+local dragStart, startPos
 
-local function StartDrag(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-       input.UserInputType == Enum.UserInputType.Touch then
+m.InputBegan:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
         dragging = true
-        dragStart = input.Position
+        dragStart = i.Position
         startPos = m.Position
     end
-end
+end)
 
-local function UpdateDrag(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or 
-                     input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        m.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
+m.InputChanged:Connect(function(i)
+    if dragging and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+        local delta = i.Position - dragStart
+        m.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
-end
+end)
 
-local function EndDrag(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-       input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-    end
-end
+m.InputEnded:Connect(function(i)
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then dragging = false end
+end)
 
-m.InputBegan:Connect(StartDrag)
-m.InputChanged:Connect(UpdateDrag)
-m.InputEnded:Connect(EndDrag)
+-- TÍTULO
+local titulo = s("TextLabel")
+titulo.Name = "Titulo"
+titulo.Size = UDim2.new(1, 0, 0, 40)
+titulo.Position = UDim2.new(0, 0, 0, 0)
+titulo.BackgroundTransparency = 1
+titulo.Text = "Comando EJ🇧🇷💀🐺"
+titulo.TextColor3 = Color3.fromRGB(255, 200, 50)
+titulo.TextScaled = true
+titulo.Font = Enum.Font.GothamBold
+titulo.ZIndex = 2
+titulo.Parent = m
 
--- ============================================
--- BOTÃO MINIMIZAR (CORRIGIDO)
--- ============================================
+-- BOTÃO MINIMIZAR
 local mn = s("TextButton")
 mn.Size = UDim2.new(0, 30, 0, 30)
 mn.Position = UDim2.new(1, -35, 0, 5)
@@ -130,59 +117,16 @@ mn.BorderSizePixel = 1
 mn.BorderColor3 = Color3.fromRGB(255, 200, 50)
 mn.ZIndex = 2
 mn.Parent = m
-
 local mnCorner = Instance.new("UICorner")
 mnCorner.Parent = mn
 mnCorner.CornerRadius = UDim.new(0, 8)
 
-local mini = false
-
--- Lista de elementos que NÃO devem ser escondidos (ficam sempre visíveis)
-local sempreVisiveis = {mn, m:FindFirstChild("Titulo"), borda, brilho}
-
-mn.MouseButton1Click:Connect(function()
-    mini = not mini
-    if mini then
-        m.Size = UDim2.new(0, 300, 0, 40) -- encolhe o frame
-        for _, c in pairs(m:GetChildren()) do
-            local deveFicar = false
-            for _, v in pairs(sempreVisiveis) do
-                if c == v then deveFicar = true break end
-            end
-            if not deveFicar then
-                c.Visible = false
-            end
-        end
-        mn.Text = "➕"
-        print("🟡 Minimizado")
-    else
-        m.Size = UDim2.new(0, 300, 0, 320) -- volta ao tamanho normal
-        for _, c in pairs(m:GetChildren()) do
-            c.Visible = true
-        end
-        mn.Text = "➖"
-        print("🟢 Restaurado")
-    end
-end)
-
 -- ============================================
--- TÍTULO E LABELS
+-- BOTÕES E LABELS (vamos guardar pra esconder)
 -- ============================================
-local t = s("TextLabel")
-t.Name = "Titulo"
-t.Size = UDim2.new(1, 0, 0, 40)
-t.Position = UDim2.new(0, 0, 0, 0)
-t.BackgroundTransparency = 1
-t.Text = "Comando EJ🇧🇷💀🐺"
-t.TextColor3 = Color3.fromRGB(255, 200, 50)
-t.TextScaled = true
-t.Font = Enum.Font.GothamBold
-t.ZIndex = 2
-t.Parent = m
+local elementosParaEsconder = {}
 
--- ============================================
--- BOTÃO PARKOUR (com GHOST V1)
--- ============================================
+-- PARKOUR
 local pLabel = s("TextLabel")
 pLabel.Size = UDim2.new(1, 0, 0, 30)
 pLabel.Position = UDim2.new(0, 0, 0, 40)
@@ -192,6 +136,7 @@ pLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 pLabel.TextScaled = true
 pLabel.Font = Enum.Font.Gotham
 pLabel.Parent = m
+table.insert(elementosParaEsconder, pLabel)
 
 local pk = s("TextButton")
 pk.Size = UDim2.new(0.8, 0, 0, 35)
@@ -203,14 +148,12 @@ pk.TextScaled = true
 pk.Font = Enum.Font.GothamBold
 pk.BorderSizePixel = 0
 pk.Parent = m
-
 local pkCorner = Instance.new("UICorner")
 pkCorner.Parent = pk
 pkCorner.CornerRadius = UDim.new(0, 10)
+table.insert(elementosParaEsconder, pk)
 
--- ============================================
--- BOTÃO JJS
--- ============================================
+-- JJS
 local jLabel = s("TextLabel")
 jLabel.Size = UDim2.new(1, 0, 0, 30)
 jLabel.Position = UDim2.new(0, 0, 0, 110)
@@ -220,6 +163,7 @@ jLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 jLabel.TextScaled = true
 jLabel.Font = Enum.Font.Gotham
 jLabel.Parent = m
+table.insert(elementosParaEsconder, jLabel)
 
 local jj = s("TextButton")
 jj.Size = UDim2.new(0.8, 0, 0, 35)
@@ -231,14 +175,12 @@ jj.TextScaled = true
 jj.Font = Enum.Font.GothamBold
 jj.BorderSizePixel = 0
 jj.Parent = m
-
 local jjCorner = Instance.new("UICorner")
 jjCorner.Parent = jj
 jjCorner.CornerRadius = UDim.new(0, 10)
+table.insert(elementosParaEsconder, jj)
 
--- ============================================
--- BOTÃO HITBOX
--- ============================================
+-- HITBOX
 local hLabel = s("TextLabel")
 hLabel.Size = UDim2.new(1, 0, 0, 30)
 hLabel.Position = UDim2.new(0, 0, 0, 180)
@@ -248,6 +190,7 @@ hLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 hLabel.TextScaled = true
 hLabel.Font = Enum.Font.Gotham
 hLabel.Parent = m
+table.insert(elementosParaEsconder, hLabel)
 
 local hb = s("TextButton")
 hb.Size = UDim2.new(0.8, 0, 0, 35)
@@ -259,14 +202,12 @@ hb.TextScaled = true
 hb.Font = Enum.Font.GothamBold
 hb.BorderSizePixel = 0
 hb.Parent = m
-
 local hbCorner = Instance.new("UICorner")
 hbCorner.Parent = hb
 hbCorner.CornerRadius = UDim.new(0, 10)
+table.insert(elementosParaEsconder, hb)
 
--- ============================================
 -- RODAPÉ
--- ============================================
 local k = s("TextLabel")
 k.Size = UDim2.new(1, 0, 0, 25)
 k.Position = UDim2.new(0, 0, 0, 255)
@@ -276,6 +217,31 @@ k.TextColor3 = Color3.fromRGB(150, 150, 150)
 k.TextScaled = true
 k.Font = Enum.Font.Gotham
 k.Parent = m
+table.insert(elementosParaEsconder, k)
+
+-- ============================================
+-- MINIMIZAR (AGORA ESCONDE OS BOTÕES)
+-- ============================================
+local mini = false
+
+mn.MouseButton1Click:Connect(function()
+    mini = not mini
+    if mini then
+        m.Size = UDim2.new(0, 300, 0, 40)
+        for _, elem in ipairs(elementosParaEsconder) do
+            elem.Visible = false
+        end
+        mn.Text = "➕"
+        print("🟡 Minimizado (botões escondidos)")
+    else
+        m.Size = UDim2.new(0, 300, 0, 320)
+        for _, elem in ipairs(elementosParaEsconder) do
+            elem.Visible = true
+        end
+        mn.Text = "➖"
+        print("🟢 Restaurado (botões visíveis)")
+    end
+end)
 
 -- ============================================
 -- FUNÇÃO PARA EXECUTAR SCRIPTS
@@ -290,44 +256,27 @@ end
 -- ============================================
 -- CONTROLE DOS BOTÕES
 -- ============================================
-local pa = false
-local ja = false
-local ha = false
+local pa, ja, ha = false, false, false
 
--- PARKOUR
 pk.MouseButton1Click:Connect(function()
     pa = not pa
     pk.Text = pa and "PARKOUR: ON" or "PARKOUR: OFF"
     pk.BackgroundColor3 = pa and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if pa then
-        e("https://raw.githubusercontent.com/RipRuan/BarreirasMobile/main/BarreirasMobile.lua")
-    else
-        print("🔴 PARKOUR DESATIVADO")
-    end
+    if pa then e("https://raw.githubusercontent.com/RipRuan/BarreirasMobile/main/BarreirasMobile.lua") end
 end)
 
--- JJS
 jj.MouseButton1Click:Connect(function()
     ja = not ja
     jj.Text = ja and "JJS: ON" or "JJS: OFF"
     jj.BackgroundColor3 = ja and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if ja then
-        e("https://rawscripts.net/raw/Brazilian-Army-Auto-JJs-EB-do-Delta-sem-key-224236")
-    else
-        print("🔴 JJS DESATIVADO")
-    end
+    if ja then e("https://rawscripts.net/raw/Brazilian-Army-Auto-JJs-EB-do-Delta-sem-key-224236") end
 end)
 
--- HITBOX
 hb.MouseButton1Click:Connect(function()
     ha = not ha
     hb.Text = ha and "HITBOX: ON" or "HITBOX: OFF"
     hb.BackgroundColor3 = ha and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if ha then
-        e("https://rawscripts.net/raw/Universal-Script-Hitbox-V5-108660")
-    else
-        print("🔴 HITBOX DESATIVADO")
-    end
+    if ha then e("https://rawscripts.net/raw/Universal-Script-Hitbox-V5-108660") end
 end)
 
 print("✅ Comando EJ carregado com sucesso!")
