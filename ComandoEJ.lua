@@ -1,4 +1,4 @@
--- // COMANDO EJ - MENU PRINCIPAL // --
+-- // COMANDO EJ - VERSÃO SIMPLES E GARANTIDA // --
 local s = Instance.new
 local g = game:GetService("Players").LocalPlayer.PlayerGui
 local plr = game:GetService("Players").LocalPlayer
@@ -122,26 +122,25 @@ mnCorner.Parent = mn
 mnCorner.CornerRadius = UDim.new(0, 8)
 
 -- ============================================
--- BOTÕES E LABELS
+-- BOTÕES E LABELS (vamos guardar pra esconder)
 -- ============================================
 local elementosParaEsconder = {}
 
--- LABEL PARKOUR
-local pkLabel = s("TextLabel")
-pkLabel.Size = UDim2.new(1, 0, 0, 30)
-pkLabel.Position = UDim2.new(0, 0, 0, 60)
-pkLabel.BackgroundTransparency = 1
-pkLabel.Text = "ATIVAR PARKOUR"
-pkLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-pkLabel.TextScaled = true
-pkLabel.Font = Enum.Font.Gotham
-pkLabel.Parent = m
-table.insert(elementosParaEsconder, pkLabel)
+-- PARKOUR
+local pLabel = s("TextLabel")
+pLabel.Size = UDim2.new(1, 0, 0, 30)
+pLabel.Position = UDim2.new(0, 0, 0, 40)
+pLabel.BackgroundTransparency = 1
+pLabel.Text = "PARKOUR"
+pLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+pLabel.TextScaled = true
+pLabel.Font = Enum.Font.Gotham
+pLabel.Parent = m
+table.insert(elementosParaEsconder, pLabel)
 
--- BOTÃO PARKOUR
 local pk = s("TextButton")
 pk.Size = UDim2.new(0.8, 0, 0, 35)
-pk.Position = UDim2.new(0.1, 0, 0, 90)
+pk.Position = UDim2.new(0.1, 0, 0, 70)
 pk.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
 pk.Text = "PARKOUR: OFF"
 pk.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -157,7 +156,7 @@ table.insert(elementosParaEsconder, pk)
 -- JJS
 local jLabel = s("TextLabel")
 jLabel.Size = UDim2.new(1, 0, 0, 30)
-jLabel.Position = UDim2.new(0, 0, 0, 140)
+jLabel.Position = UDim2.new(0, 0, 0, 110)
 jLabel.BackgroundTransparency = 1
 jLabel.Text = "ATIVAR JJs"
 jLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -168,7 +167,7 @@ table.insert(elementosParaEsconder, jLabel)
 
 local jj = s("TextButton")
 jj.Size = UDim2.new(0.8, 0, 0, 35)
-jj.Position = UDim2.new(0.1, 0, 0, 170)
+jj.Position = UDim2.new(0.1, 0, 0, 140)
 jj.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
 jj.Text = "JJS: OFF"
 jj.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -184,7 +183,7 @@ table.insert(elementosParaEsconder, jj)
 -- HITBOX
 local hLabel = s("TextLabel")
 hLabel.Size = UDim2.new(1, 0, 0, 30)
-hLabel.Position = UDim2.new(0, 0, 0, 210)
+hLabel.Position = UDim2.new(0, 0, 0, 180)
 hLabel.BackgroundTransparency = 1
 hLabel.Text = "PVP HITBOX"
 hLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -195,7 +194,7 @@ table.insert(elementosParaEsconder, hLabel)
 
 local hb = s("TextButton")
 hb.Size = UDim2.new(0.8, 0, 0, 35)
-hb.Position = UDim2.new(0.1, 0, 0, 240)
+hb.Position = UDim2.new(0.1, 0, 0, 210)
 hb.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
 hb.Text = "HITBOX: OFF"
 hb.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -211,7 +210,7 @@ table.insert(elementosParaEsconder, hb)
 -- RODAPÉ
 local k = s("TextLabel")
 k.Size = UDim2.new(1, 0, 0, 25)
-k.Position = UDim2.new(0, 0, 0, 280)
+k.Position = UDim2.new(0, 0, 0, 255)
 k.BackgroundTransparency = 1
 k.Text = "RipJ e ErickX"
 k.TextColor3 = Color3.fromRGB(150, 150, 150)
@@ -221,7 +220,7 @@ k.Parent = m
 table.insert(elementosParaEsconder, k)
 
 -- ============================================
--- MINIMIZAR
+-- MINIMIZAR (AGORA ESCONDE OS BOTÕES)
 -- ============================================
 local mini = false
 
@@ -233,66 +232,51 @@ mn.MouseButton1Click:Connect(function()
             elem.Visible = false
         end
         mn.Text = "➕"
+        print("🟡 Minimizado (botões escondidos)")
     else
         m.Size = UDim2.new(0, 300, 0, 320)
         for _, elem in ipairs(elementosParaEsconder) do
             elem.Visible = true
         end
         mn.Text = "➖"
+        print("🟢 Restaurado (botões visíveis)")
     end
 end)
 
 -- ============================================
 -- FUNÇÃO PARA EXECUTAR SCRIPTS
 -- ============================================
-local function executarScript(url)
+local function e(u)
     pcall(function()
-        loadstring(game:HttpGet(url))()
-        print("✅ Script executado: " .. url)
+        loadstring(game:HttpGet(u))()
+        print("✅ Script executado: " .. u)
     end)
 end
 
 -- ============================================
--- CONTROLE DOS BOTÕES (CORRIGIDO)
+-- CONTROLE DOS BOTÕES
 -- ============================================
-local pa = false  -- Parkour
-local ja = false  -- JJs
-local ha = false  -- Hitbox
+local pa, ja, ha = false, false, false
 
--- BOTÃO PARKOUR
 pk.MouseButton1Click:Connect(function()
     pa = not pa
     pk.Text = pa and "PARKOUR: ON" or "PARKOUR: OFF"
     pk.BackgroundColor3 = pa and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if pa then
-        executarScript("https://raw.githubusercontent.com/RipRuan/ComandoEJ/main/ParkourComandoEJ.lua")
-    else
-        print("🟡 Parkour desativado")
-    end
+    if pa then e("https://raw.githubusercontent.com/RipRuan/BarreirasMobile/main/BarreirasMobile.lua") end
 end)
 
--- BOTÃO JJS
 jj.MouseButton1Click:Connect(function()
     ja = not ja
     jj.Text = ja and "JJS: ON" or "JJS: OFF"
     jj.BackgroundColor3 = ja and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if ja then 
-        executarScript("https://rawscripts.net/raw/Brazilian-Army-Auto-JJs-EB-do-Delta-sem-key-224236") 
-    else
-        print("🟡 JJs desativado")
-    end
+    if ja then e("https://rawscripts.net/raw/Brazilian-Army-Auto-JJs-EB-do-Delta-sem-key-224236") end
 end)
 
--- BOTÃO HITBOX
 hb.MouseButton1Click:Connect(function()
     ha = not ha
     hb.Text = ha and "HITBOX: ON" or "HITBOX: OFF"
     hb.BackgroundColor3 = ha and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if ha then 
-        executarScript("https://rawscripts.net/raw/Universal-Script-Hitbox-V5-108660") 
-    else
-        print("🟡 Hitbox desativado")
-    end
+    if ha then e("https://rawscripts.net/raw/Universal-Script-Hitbox-V5-108660") end
 end)
 
 print("✅ Comando EJ carregado com sucesso!")
