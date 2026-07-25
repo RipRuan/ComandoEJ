@@ -262,7 +262,7 @@ pk.MouseButton1Click:Connect(function()
     pa = not pa
     pk.Text = pa and "PARKOUR: ON" or "PARKOUR: OFF"
     pk.BackgroundColor3 = pa and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if pa then e("https://pastebin.com/raw/ss0YA1KP") -- <--- NOVO SCRIPT end
+    if pa then e("https://raw.githubusercontent.com/RipRuan/Parkour/main/Parkour.lua") end
 end)
 
 jj.MouseButton1Click:Connect(function()
