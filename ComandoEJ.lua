@@ -126,12 +126,38 @@ mnCorner.CornerRadius = UDim.new(0, 8)
 -- ============================================
 local elementosParaEsconder = {}
 
--- PARKOUR
-loadstring(game:HttpGet("https://raw.githubusercontent.com/RipRuan/ComandoEJPARKOUR/main/COMANDOEJPARKOUR"))()
+-- LABEL PARKOUR
+local pkLabel = s("TextLabel")
+pkLabel.Size = UDim2.new(1, 0, 0, 30)
+pkLabel.Position = UDim2.new(0, 0, 0, 60)
+pkLabel.BackgroundTransparency = 1
+pkLabel.Text = "ATIVAR PARKOUR"
+pkLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+pkLabel.TextScaled = true
+pkLabel.Font = Enum.Font.Gotham
+pkLabel.Parent = m
+table.insert(elementosParaEsconder, pkLabel)
+
+-- BOTÃO PARKOUR (RECRIADO E MODIFICADO)
+local pk = s("TextButton")
+pk.Size = UDim2.new(0.8, 0, 0, 35)
+pk.Position = UDim2.new(0.1, 0, 0, 90)
+pk.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
+pk.Text = "PARKOUR: OFF"
+pk.TextColor3 = Color3.fromRGB(0, 0, 0)
+pk.TextScaled = true
+pk.Font = Enum.Font.GothamBold
+pk.BorderSizePixel = 0
+pk.Parent = m
+local pkCorner = Instance.new("UICorner")
+pkCorner.Parent = pk
+pkCorner.CornerRadius = UDim.new(0, 10)
+table.insert(elementosParaEsconder, pk)
+
 -- JJS
 local jLabel = s("TextLabel")
 jLabel.Size = UDim2.new(1, 0, 0, 30)
-jLabel.Position = UDim2.new(0, 0, 0, 110)
+jLabel.Position = UDim2.new(0, 0, 0, 140)
 jLabel.BackgroundTransparency = 1
 jLabel.Text = "ATIVAR JJs"
 jLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -142,7 +168,7 @@ table.insert(elementosParaEsconder, jLabel)
 
 local jj = s("TextButton")
 jj.Size = UDim2.new(0.8, 0, 0, 35)
-jj.Position = UDim2.new(0.1, 0, 0, 140)
+jj.Position = UDim2.new(0.1, 0, 0, 170)
 jj.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
 jj.Text = "JJS: OFF"
 jj.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -158,7 +184,7 @@ table.insert(elementosParaEsconder, jj)
 -- HITBOX
 local hLabel = s("TextLabel")
 hLabel.Size = UDim2.new(1, 0, 0, 30)
-hLabel.Position = UDim2.new(0, 0, 0, 180)
+hLabel.Position = UDim2.new(0, 0, 0, 210)
 hLabel.BackgroundTransparency = 1
 hLabel.Text = "PVP HITBOX"
 hLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -169,7 +195,7 @@ table.insert(elementosParaEsconder, hLabel)
 
 local hb = s("TextButton")
 hb.Size = UDim2.new(0.8, 0, 0, 35)
-hb.Position = UDim2.new(0.1, 0, 0, 210)
+hb.Position = UDim2.new(0.1, 0, 0, 240)
 hb.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
 hb.Text = "HITBOX: OFF"
 hb.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -185,7 +211,7 @@ table.insert(elementosParaEsconder, hb)
 -- RODAPÉ
 local k = s("TextLabel")
 k.Size = UDim2.new(1, 0, 0, 25)
-k.Position = UDim2.new(0, 0, 0, 255)
+k.Position = UDim2.new(0, 0, 0, 280)
 k.BackgroundTransparency = 1
 k.Text = "RipJ e ErickX"
 k.TextColor3 = Color3.fromRGB(150, 150, 150)
@@ -221,37 +247,46 @@ end)
 -- ============================================
 -- FUNÇÃO PARA EXECUTAR SCRIPTS
 -- ============================================
-local function e(u)
+local function executarScript(url)
     pcall(function()
-        loadstring(game:HttpGet(u))()
-        print("✅ Script executado: " .. u)
+        loadstring(game:HttpGet(url))()
+        print("✅ Script executado: " .. url)
     end)
 end
 
 -- ============================================
--- CONTROLE DOS BOTÕES
+-- CONTROLE DOS BOTÕES (PARKOUR MODIFICADO)
 -- ============================================
 local pa, ja, ha = false, false, false
 
+-- BOTÃO PARKOUR - AGORA CARREGA O SCRIPT QUANDO CLICA
 pk.MouseButton1Click:Connect(function()
     pa = not pa
     pk.Text = pa and "PARKOUR: ON" or "PARKOUR: OFF"
     pk.BackgroundColor3 = pa and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if pa then e("https://raw.githubusercontent.com/RipRuan/BarreirasMobile/main/BarreirasMobile.lua") end
+    if pa then
+        -- Carrega o script do parkour com o título já alterado
+        executarScript("https://raw.githubusercontent.com/RipRuan/ComandoEJ/main/ParkourComandoEJ.lua")
+    else
+        -- Aqui você pode colocar lógica para desativar o parkour se quiser
+        print("🟡 Parkour desativado (o script continua rodando)")
+        -- Nota: O script do parkour não tem uma função de "desligar" fácil,
+        -- então ele continua rodando mesmo com o botão "OFF"
+    end
 end)
 
 jj.MouseButton1Click:Connect(function()
     ja = not ja
     jj.Text = ja and "JJS: ON" or "JJS: OFF"
     jj.BackgroundColor3 = ja and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if ja then e("https://rawscripts.net/raw/Brazilian-Army-Auto-JJs-EB-do-Delta-sem-key-224236") end
+    if ja then executarScript("https://rawscripts.net/raw/Brazilian-Army-Auto-JJs-EB-do-Delta-sem-key-224236") end
 end)
 
 hb.MouseButton1Click:Connect(function()
     ha = not ha
     hb.Text = ha and "HITBOX: ON" or "HITBOX: OFF"
     hb.BackgroundColor3 = ha and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 200, 50)
-    if ha then e("https://rawscripts.net/raw/Universal-Script-Hitbox-V5-108660") end
+    if ha then executarScript("https://rawscripts.net/raw/Universal-Script-Hitbox-V5-108660") end
 end)
 
 print("✅ Comando EJ carregado com sucesso!")
