@@ -127,32 +127,7 @@ mnCorner.CornerRadius = UDim.new(0, 8)
 local elementosParaEsconder = {}
 
 -- PARKOUR
-local pLabel = s("TextLabel")
-pLabel.Size = UDim2.new(1, 0, 0, 30)
-pLabel.Position = UDim2.new(0, 0, 0, 40)
-pLabel.BackgroundTransparency = 1
-pLabel.Text = "PARKOUR"
-pLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-pLabel.TextScaled = true
-pLabel.Font = Enum.Font.Gotham
-pLabel.Parent = m
-table.insert(elementosParaEsconder, pLabel)
-
-local pk = s("TextButton")
-pk.Size = UDim2.new(0.8, 0, 0, 35)
-pk.Position = UDim2.new(0.1, 0, 0, 70)
-pk.BackgroundColor3 = Color3.fromRGB(255, 200, 50)
-pk.Text = "PARKOUR: OFF"
-pk.TextColor3 = Color3.fromRGB(0, 0, 0)
-pk.TextScaled = true
-pk.Font = Enum.Font.GothamBold
-pk.BorderSizePixel = 0
-pk.Parent = m
-local pkCorner = Instance.new("UICorner")
-pkCorner.Parent = pk
-pkCorner.CornerRadius = UDim.new(0, 10)
-table.insert(elementosParaEsconder, pk)
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/RipRuan/ComandoEJPARKOUR/main/COMANDOEJPARKOUR"))()
 -- JJS
 local jLabel = s("TextLabel")
 jLabel.Size = UDim2.new(1, 0, 0, 30)
